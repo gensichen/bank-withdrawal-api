@@ -1,5 +1,6 @@
 package com.bank.bankwithdrawalapi.application;
 
+import com.bank.bankwithdrawalapi.application.exceptions.InsufficientFundsException;
 import com.bank.bankwithdrawalapi.domain.IBankAccountRepository;
 import com.bank.bankwithdrawalapi.domain.IEventPublisher;
 import com.bank.bankwithdrawalapi.domain.WithdrawalEvent;
@@ -11,7 +12,7 @@ import software.amazon.awssdk.services.sns.model.PublishResponse;
 import java.math.BigDecimal;
 
 @Service
-public class WithdrawalService {
+public class WithdrawalService implements IWithdrawalService {
 
     private final IBankAccountRepository _bankAccountRepository;
     private final IEventPublisher _eventPublisher;
@@ -24,13 +25,18 @@ public class WithdrawalService {
     }
 
     public String withdraw(Long accountId, BigDecimal amount) {
-        BigDecimal currentBalance = jdbcTemplate.queryForObject(sql, new Object[]{accountId}, BigDecimal.class);
+
+        BigDecimal currentBalance = _bankAccountRepository.getBalance(accountId);
 
         if (currentBalance != null && currentBalance.compareTo(amount) >= 0) {
             // Update balance
             //sql = "UPDATE accounts SET balance = balance - ? WHERE id = ?";
-            int rowsAffected = jdbcTemplate.update(sql, amount, accountId);
+            int rowsAffected = _bankAccountRepository.updateBalance(accountId, amount);
             if (rowsAffected > 0) {
+                // After a successful withdrawal, publish a withdrawal event to SNS
+                WithdrawalEvent event = new WithdrawalEvent(amount, accountId, "SUCCESSFUL");
+                _eventPublisher.publishEvent(event);
+
                 return "Withdrawal successful";
             } else {
                 // In case the update fails for reasons other than a balance check
@@ -38,20 +44,7 @@ public class WithdrawalService {
             }
         } else {
             // Insufficient funds
-            return "Insufficient funds for withdrawal";
+            throw new InsufficientFundsException();
         }
-
-        // After a successful withdrawal, publish a withdrawal event to SNS
-        WithdrawalEvent event = new WithdrawalEvent(amount, accountId, "SUCCESSFUL");
-        String eventJson = event.toJson(); // Convert event to JSON
-        String snsTopicArn = "arn:aws:sns:YOUR_REGION:YOUR_ACCOUNT_ID:YOUR_TOPIC_NAME";
-
-        PublishRequest publishRequest = PublishRequest.builder()
-                .message(eventJson)
-                .topicArn(snsTopicArn)
-                .build();
-        PublishResponse publishResponse = snsClient.publish(publishRequest);
-
-        return "Withdrawal successful";
     }
 }

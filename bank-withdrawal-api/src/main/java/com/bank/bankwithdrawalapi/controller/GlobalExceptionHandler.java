@@ -1,0 +1,23 @@
+package com.bank.bankwithdrawalapi.controller;
+
+import com.bank.bankwithdrawalapi.application.exceptions.GeneralException;
+import com.bank.bankwithdrawalapi.application.exceptions.InsufficientFundsException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.http.ResponseEntity;
+
+
+@ControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(InsufficientFundsException.class)
+    public ResponseEntity<String> handleInsufficientFundsException(InsufficientFundsException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
+    @ExceptionHandler(GeneralException.class)
+    public ResponseEntity<String> handleGeneralException(Exception ex) {
+        return ResponseEntity.internalServerError().body(ex.getMessage());
+    }
+
+}
