@@ -23,7 +23,7 @@ public class WithdrawalService {
         _eventPublisher = eventPublisher;
     }
 
-    public void withdraw(Long accountId, BigDecimal amount) {
+    public String withdraw(Long accountId, BigDecimal amount) {
         BigDecimal currentBalance = jdbcTemplate.queryForObject(sql, new Object[]{accountId}, BigDecimal.class);
 
         if (currentBalance != null && currentBalance.compareTo(amount) >= 0) {
