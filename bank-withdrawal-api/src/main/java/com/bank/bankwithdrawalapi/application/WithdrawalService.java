@@ -27,7 +27,7 @@ public class WithdrawalService implements IWithdrawalService {
     public String withdraw(Long accountId, BigDecimal amount) {
         try {
             VerifyWithdrawalIsAllowed(accountId, amount);
-            WithDrawFunds(accountId, amount);
+            WithdrawFunds(accountId, amount);
             PublishWithdrawalEvent(accountId, amount);
 
             return "Withdrawal successful";
@@ -40,12 +40,12 @@ public class WithdrawalService implements IWithdrawalService {
 
     private void VerifyWithdrawalIsAllowed(Long accountId, BigDecimal amount) {
         BigDecimal currentBalance = _bankAccountRepository.getBalance(accountId);
-        if (currentBalance != null && currentBalance.compareTo(amount) >= 0) {
+        if (currentBalance == null && currentBalance.compareTo(amount) <= 0) {
             throw new InsufficientFundsException();
         }
     }
 
-    private void WithDrawFunds(Long accountId, BigDecimal amount) {
+    private void WithdrawFunds(Long accountId, BigDecimal amount) {
         int rowsAffected = _bankAccountRepository.updateBalance(accountId, amount);
         if (rowsAffected <= 0) {
             throw new WithdrawalFailedException();
@@ -56,8 +56,4 @@ public class WithdrawalService implements IWithdrawalService {
         WithdrawalEvent event = new WithdrawalEvent(amount, accountId, "SUCCESSFUL");
         _eventPublisher.publishEvent(event);
     }
-
-
-
-
 }
