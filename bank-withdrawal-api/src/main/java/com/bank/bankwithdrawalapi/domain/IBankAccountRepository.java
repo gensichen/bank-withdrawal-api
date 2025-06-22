@@ -12,9 +12,10 @@ public interface IBankAccountRepository {
      * Updates the balance of a bank account identified by the given account ID.
      *
      * @param accountId the unique identifier of the bank account whose balance is to be updated.
-     * @param amount the amount to update the balance by, this can be positive or negative.
+     * @param amount    the amount to update the balance by, this can be positive or negative.
+     * @return int returns number of rows effected.
      */
-    public void updateBalance(Long accountId, BigDecimal amount);
+    public int updateBalance(Long accountId, BigDecimal amount);
 
     /**
      * Retrieves the current balance of a bank account identified by the given account ID.

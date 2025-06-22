@@ -18,9 +18,9 @@ public class BankAccountRespositoryImp implements IBankAccountRepository {
     }
 
     @Override
-    public void updateBalance(Long accountId, BigDecimal amount) {
+    public int updateBalance(Long accountId, BigDecimal amount) {
         String sql = "UPDATE accounts SET balance = balance - ? WHERE id = ?";
-        int rowsAffected = _jdbcTemplate.update(sql, amount, accountId);
+        return _jdbcTemplate.update(sql, amount, accountId);
     }
 
     @Override
