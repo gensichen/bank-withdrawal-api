@@ -1,5 +1,6 @@
 package com.bank.bankwithdrawalapi.controller;
 
+import com.bank.bankwithdrawalapi.application.exceptions.AccountNotFoundException;
 import com.bank.bankwithdrawalapi.application.exceptions.GeneralException;
 import com.bank.bankwithdrawalapi.application.exceptions.InsufficientFundsException;
 import com.bank.bankwithdrawalapi.application.exceptions.WithdrawalFailedException;
@@ -26,4 +27,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.internalServerError().body(ex.getMessage());
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
+    @ExceptionHandler(AccountNotFoundException.class)
+    public ResponseEntity<String> handleAccountNotFoundException(AccountNotFoundException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
 }
