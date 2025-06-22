@@ -40,7 +40,7 @@ public class WithdrawalService implements IWithdrawalService {
 
     private void VerifyWithdrawalIsAllowed(Long accountId, BigDecimal amount) {
         BigDecimal currentBalance = _bankAccountRepository.getBalance(accountId);
-        if (currentBalance == null && currentBalance.compareTo(amount) <= 0) {
+        if (currentBalance == null || currentBalance.compareTo(amount) <= 0) {
             throw new InsufficientFundsException();
         }
     }
