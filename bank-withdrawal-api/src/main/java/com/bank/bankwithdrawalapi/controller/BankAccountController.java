@@ -1,6 +1,6 @@
 package com.bank.bankwithdrawalapi.controller;
 
-import com.bank.bankwithdrawalapi.application.WithdrawalService;
+import com.bank.bankwithdrawalapi.application.IWithdrawalService;
 import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 @RequestMapping("/bank")
 public class BankAccountController {
 
-    private final WithdrawalService _withdrawalService;
+    private final IWithdrawalService _withdrawalService;
 
     @Autowired
-    public BankAccountController(WithdrawalService withdrawalService) {
+    public BankAccountController(IWithdrawalService withdrawalService) {
         _withdrawalService = withdrawalService;
     }
 

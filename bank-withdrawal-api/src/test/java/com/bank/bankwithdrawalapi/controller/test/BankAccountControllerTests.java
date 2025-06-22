@@ -1,6 +1,6 @@
 package com.bank.bankwithdrawalapi.controller.test;
 
-import com.bank.bankwithdrawalapi.application.WithdrawalService;
+import com.bank.bankwithdrawalapi.application.IWithdrawalService;
 import com.bank.bankwithdrawalapi.application.exceptions.InsufficientFundsException;
 import com.bank.bankwithdrawalapi.controller.BankAccountController;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,7 @@ class BankAccountControllerTests {
     private MockMvc mockMvc;
 
     @MockBean
-    private WithdrawalService withdrawalService;
+    private IWithdrawalService withdrawalService;
 
     @Test
     void givenWithdrawalRequest_whenBalanceIsPositive_shouldReturn200Ok() throws Exception {
