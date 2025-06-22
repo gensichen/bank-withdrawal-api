@@ -10,7 +10,7 @@ import software.amazon.awssdk.services.sns.model.PublishRequest;
 import software.amazon.awssdk.services.sns.model.PublishResponse;
 
 @Component
-public class EventPublisherImp implements IEventPublisher {
+class EventPublisherImp implements IEventPublisher {
 
     private final SnsClient _snsClient;
     private final String _topic = "arn:aws:sns:YOUR_REGION:YOUR_ACCOUNT_ID:YOUR_TOPIC_NAME";

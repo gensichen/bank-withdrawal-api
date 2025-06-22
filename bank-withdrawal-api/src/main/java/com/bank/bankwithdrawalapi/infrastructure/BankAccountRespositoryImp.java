@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 
 @Repository
-public class BankAccountRespositoryImp implements IBankAccountRepository {
+class BankAccountRespositoryImp implements IBankAccountRepository {
 
     private final JdbcTemplate _jdbcTemplate;
 
