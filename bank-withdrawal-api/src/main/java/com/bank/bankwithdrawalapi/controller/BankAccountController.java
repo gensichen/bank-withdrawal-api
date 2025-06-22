@@ -1,4 +1,4 @@
-package com.bank.bankwithdrawalapi.api;
+package com.bank.bankwithdrawalapi.controller;
 
 import com.bank.bankwithdrawalapi.application.WithdrawalService;
 import org.springframework.web.bind.annotation.*;
