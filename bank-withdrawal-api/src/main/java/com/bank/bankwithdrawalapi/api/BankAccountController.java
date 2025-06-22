@@ -1,5 +1,6 @@
-package com.bank.bankwithdrawalapi.controller;
+package com.bank.bankwithdrawalapi.api;
 
+import com.bank.bankwithdrawalapi.domain.WithdrawalEvent;
 import org.springframework.web.bind.annotation.*;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.sns.SnsClient;
@@ -20,7 +21,7 @@ public class BankAccountController {
 
     public BankAccountController() {
         this.snsClient = SnsClient.builder()
-                .region(Region.YOUR_REGION) // Specify your region
+                .region(Region.AWS_GLOBAL) // ideally we should pass this through config, hardcoded values are not good.
                 .build();
     }
 
