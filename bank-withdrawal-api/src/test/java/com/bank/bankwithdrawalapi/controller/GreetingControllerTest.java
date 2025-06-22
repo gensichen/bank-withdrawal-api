@@ -2,8 +2,11 @@ package com.bank.bankwithdrawalapi.controller;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import org.springframework.http.MediaType;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +41,20 @@ public class GreetingControllerTest {
 
         // When/Then
         mockMvc.perform(get("/api/greeting/{name}", name))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.message", is(expectedMessage)));
+    }
+
+    @Test
+    public void testGreetPersonPost() throws Exception {
+        // Given
+        String name = "John";
+        String expectedMessage = "Hello Johnmm";
+
+        // When/Then
+        mockMvc.perform(post("/api/greeting")
+               .contentType(MediaType.TEXT_PLAIN)
+               .content(name))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$.message", is(expectedMessage)));
     }
