@@ -2,12 +2,10 @@ package com.bank.bankwithdrawalapi.infrastructure;
 
 import com.bank.bankwithdrawalapi.domain.IEventPublisher;
 import com.bank.bankwithdrawalapi.domain.WithdrawalEvent;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.sns.SnsClient;
 import software.amazon.awssdk.services.sns.model.PublishRequest;
-import software.amazon.awssdk.services.sns.model.PublishResponse;
 
 @Component
 class EventPublisherImp implements IEventPublisher {
@@ -27,7 +25,14 @@ class EventPublisherImp implements IEventPublisher {
                 .message(event.toJson())
                 .topicArn(_topic)
                 .build();
-        PublishResponse publishResponse = _snsClient.publish(publishRequest);
+        try {
+            _snsClient.publish(publishRequest);
+        }
+        catch (Exception ex)
+        {
+            // assuming a business here is that event publishing is fire & forget so publishing failures should not hinder a "successful withdrawal request".
+            // there swallowing the exception here but need to log it with a logger so this can be tracked via observability/monitoring.
+        }
     }
 
 }
